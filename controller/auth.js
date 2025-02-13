@@ -24,15 +24,29 @@ export const signUp = async (req, res) => {
       });
     }
 
-    const newUser = await User.create(value);
+    const hashedPassword = await bcrypt.hash(value.password, 10);
+
+    const newUser = await User.create({
+      name: value.name,
+      email: value.email,
+      password: hashedPassword,
+      phone: value.phone,
+      location: value.location,
+    });
 
     return res.status(201).json({
       status: 201,
       message: "User registered successfully",
-      data: newUser,
+      data: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        phone: newUser.phone,
+        location: newUser.location,
+      },
     });
   } catch (error) {
-    console.error("Sign Up Error:", error);
+    console.error("Sign-Up Error:", error);
     return res.status(500).json({
       status: 500,
       message: "Internal Server Error",
@@ -53,6 +67,8 @@ export const login = async (req, res) => {
     }
 
     const verifyUser = await User.findOne({ email: value.email });
+
+    // console.log("Verify User", verifyUser);
 
     if (!verifyUser) {
       return res.status(404).json({

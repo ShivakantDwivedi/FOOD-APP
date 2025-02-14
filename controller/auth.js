@@ -113,3 +113,43 @@ export const login = async (req, res) => {
     });
   }
 };
+
+export async function changePassword(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    const { error, value } = loginSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        status: 400,
+        message: "Validation Error",
+        details: error.details.map((err) => err.message),
+      });
+    }
+
+    const user = await User.findOne({ email: value.email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully.",
+    });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to change password.",
+      error: error.message,
+    });
+  }
+}

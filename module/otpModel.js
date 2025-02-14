@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const otpSchema = new mongoose.Schema({
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "User",
-  // },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   email: {
     type: String,
   },
@@ -13,10 +13,6 @@ const otpSchema = new mongoose.Schema({
   },
   otp: {
     type: String,
-    required: true,
-  },
-  expiresAt: {
-    type: Date,
     required: true,
   },
   createdAt: {

@@ -1,6 +1,7 @@
 import otpGenerator from "otp-generator";
 import { sendEmail, sendSMS } from "../utils/mailSender.js";
 import OTP from "../module/otpModel.js";
+import User from "../module/userModel.js";
 
 export async function sendDynamicOTP(req, res) {
   try {
@@ -10,6 +11,15 @@ export async function sendDynamicOTP(req, res) {
       return res.status(400).json({
         success: false,
         message: "Email or phone number is required",
+      });
+    }
+
+    const UserEmailPresent = User.find({ email: email });
+
+    if (!UserEmailPresent) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is not found",
       });
     }
 
@@ -62,7 +72,16 @@ export async function verifyOTP(req, res) {
       });
     }
 
-    const otpRecord = await OTP.findOne({ email });
+    const UserEmailPresent = User.find({ email: email });
+
+    if (!UserEmailPresent) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is not found",
+      });
+    }
+
+    const otpRecord = await OTP.findOne({ userId: UserEmailPresent._id });
 
     if (!otpRecord) {
       return res.status(404).json({

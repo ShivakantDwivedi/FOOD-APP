@@ -135,6 +135,15 @@ export async function changePassword(req, res) {
         message: "User not found.",
       });
     }
+
+    const isSamePassword = await bcrypt.compare(password, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password cannot be the same as the old password.",
+      });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.password = hashedPassword;

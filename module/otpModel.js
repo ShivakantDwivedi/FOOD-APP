@@ -5,12 +5,6 @@ const otpSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  email: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
   otp: {
     type: String,
     required: true,

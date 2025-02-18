@@ -28,6 +28,34 @@ export const editProfileDetails = async (req, res) => {
       });
     }
 
+    if (req.body.email) {
+      const existingEmail = await User.findOne({
+        email: req.body.email,
+        _id: { $ne: userId },
+      });
+
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message: "Email already in use by another account.",
+        });
+      }
+    }
+
+    if (req.body.phone) {
+      const existingPhone = await User.findOne({
+        phone: req.body.phone,
+        _id: { $ne: userId },
+      });
+
+      if (existingPhone) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone number already in use by another account.",
+        });
+      }
+    }
+
     const allowedFields = ["name", "email", "phone", "location"];
     let isUpdated = false;
 

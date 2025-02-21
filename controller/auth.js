@@ -32,6 +32,7 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
       phone: value.phone,
       location: value.location,
+      role: value.role,
     });
 
     return res.status(201).json({
@@ -43,6 +44,7 @@ export const signUp = async (req, res) => {
         email: newUser.email,
         phone: newUser.phone,
         location: newUser.location,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -90,7 +92,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: verifyUser._id, email: verifyUser.email },
+      { id: verifyUser._id, email: verifyUser.email, role: verifyUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -99,8 +101,9 @@ export const login = async (req, res) => {
       status: 200,
       message: "Login successful",
       data: {
-        userId: verifyUser._id,
+        _id: verifyUser._id,
         email: verifyUser.email,
+        role: verifyUser.role,
         token,
       },
     });

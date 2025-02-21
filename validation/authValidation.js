@@ -10,6 +10,9 @@ export const signUpSchema = Joi.object({
     .pattern(/[6-9]{1}[0-9]{9}/)
     .optional(),
   gender: Joi.string().valid("Male", "Female", "Other").optional(),
+  role: Joi.string()
+    .valid("user", "restaurantOwner", "deliveryPerson")
+    .required(),
 });
 
 export const loginSchema = Joi.object({
